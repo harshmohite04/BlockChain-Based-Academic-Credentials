@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import {
   MDBBtn,
   MDBContainer,
@@ -13,16 +13,13 @@ import {
 
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
-function Register() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+function OtpVerification() {
   const [generatedOtp, setGeneratedOtp] = useState("");
   const [enteredOtp, setEnteredOtp] = useState("");
   const [otpVerified, setOtpVerified] = useState(false);
   const [error, setError] = useState("");
-
-  const navigate = useNavigate(); // For redirection after registration
+  
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   // Function to generate a random 6-digit OTP
   const generateOtp = () => {
@@ -37,39 +34,12 @@ function Register() {
     if (enteredOtp === generatedOtp) {
       setOtpVerified(true);
       setError("");
-
-      // Proceed with registration (you would normally send the data to your backend here)
-      handleRegister();
+      
+      // Redirect to /dashboard after successful verification
+      navigate("/login"); // Use navigate for redirection
     } else {
       setError("Invalid OTP, please try again.");
       setOtpVerified(false);
-    }
-  };
-
-  // Handle the registration submission
-  const handleRegister = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          email,
-          password,
-        }),
-      });
-
-      if (response.ok) {
-        // Redirect to dashboard after successful registration
-        navigate("/dashboard");
-      } else {
-        setError("Registration failed, please try again.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      setError("Server error, please try again later.");
     }
   };
 
@@ -92,34 +62,10 @@ function Register() {
           >
             <MDBCardBody className="p-5">
               <div className="text-center mb-4">
-                <MDBIcon icon="user-plus" size="3x" style={{ color: "#ad1fff" }} />
-                <h3 className="mt-3">Register</h3>
+                <MDBIcon icon="lock" size="3x" style={{ color: "#ad1fff" }} />
+                <h3 className="mt-3">OTP Verification</h3>
+                <p>Enter the OTP sent to your email to verify your identity</p>
               </div>
-
-              <MDBInput
-                wrapperClass="mb-4"
-                label="Username"
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-              <MDBInput
-                wrapperClass="mb-4"
-                label="Email"
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <MDBInput
-                wrapperClass="mb-4"
-                label="Password"
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
 
               {!generatedOtp && (
                 <MDBBtn
@@ -127,7 +73,7 @@ function Register() {
                   color="purple"
                   onClick={generateOtp}
                 >
-                  Register & Generate OTP
+                  Generate OTP
                 </MDBBtn>
               )}
 
@@ -177,4 +123,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default OtpVerification;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import {
   MDBBtn,
   MDBContainer,
@@ -9,20 +9,26 @@ import {
   MDBCardBody,
   MDBInput,
 } from "mdb-react-ui-kit";
-import UserRegistry from "../contracts/UserRegistry.json";
-import Web3 from "web3";
+// import UserRegistry from "../contracts/UserRegistry.json";
+// import Web3 from "web3";
+import axios from 'axios';
 
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 function Register() {
+  // const [username, setUsername] = useState("");
+  // const [email, setEmail] = useState("");
+
+  // const [password, setPassword] = useState("");
+  // const [showPopup, setShowPopup] = useState(false);
+  // const [walletAddress, setWalletAddress] = useState("");
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-
-  const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
   const [showPopup, setShowPopup] = useState(false);
-  const [walletAddress, setWalletAddress] = useState("");
+  const navigate = useNavigate();
 
   // Initialize Web3
   // const loadWeb3 = async () => {
@@ -36,11 +42,11 @@ function Register() {
   //   }
   // };
 
-  const loadWeb3 = async () => {
-    const web3 = new Web3('http://127.0.0.1:8545'); // Default Ganache address
-    window.web3 = web3;
-    return web3;
-};
+//   const loadWeb3 = async () => {
+//     const web3 = new Web3('http://127.0.0.1:8545'); // Default Ganache address
+//     window.web3 = web3;
+//     return web3;
+// };
 
   // Load Blockchain Data
   // const registerAccount = async () => {
@@ -74,57 +80,81 @@ function Register() {
 
 
 
-  const registerAccount = async () => {
-    try {
-        await loadWeb3();
-        const web3 = window.web3;
+//   const registerAccount = async () => {
+//     try {
+//         await loadWeb3();
+//         const web3 = window.web3;
 
-        // Log the network ID to ensure it matches
-        const networkId = await web3.eth.net.getId();
-        console.log('Network ID:', networkId);
+//         // Log the network ID to ensure it matches
+//         const networkId = await web3.eth.net.getId();
+//         console.log('Network ID:', networkId);
 
-        // If the network ID is correct, load the contract
-        if (networkId === 1727671899844) { // Use integer format
-            console.log('Entered If block');
-            const userRegistryAddress = '0xCd33Ef5C9e29DaeE95565Cbb203daEBDf445D3Fc'; // Your deployed contract address
-            const userRegistry = new web3.eth.Contract(UserRegistry.abi, userRegistryAddress);
+//         // If the network ID is correct, load the contract
+//         if (networkId === 1727671899844) { // Use integer format
+//             console.log('Entered If block');
+//             const userRegistryAddress = '0xCd33Ef5C9e29DaeE95565Cbb203daEBDf445D3Fc'; // Your deployed contract address
+//             const userRegistry = new web3.eth.Contract(UserRegistry.abi, userRegistryAddress);
 
-            const accounts = await web3.eth.getAccounts();
-            const userAccount = accounts[0];
+//             const accounts = await web3.eth.getAccounts();
+//             const userAccount = accounts[0];
 
-            // Assuming you get these values from a form in the frontend
-            const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+//             // Assuming you get these values from a form in the frontend
+//             const username = document.getElementById('username').value;
+//             const email = document.getElementById('email').value;
+//             const password = document.getElementById('password').value;
 
-            // Ensure username, email, and password are not empty
-            if (!username || !email || !password) {
-                throw new Error("Username, email, and password are required.");
-            }
+//             // Ensure username, email, and password are not empty
+//             if (!username || !email || !password) {
+//                 throw new Error("Username, email, and password are required.");
+//             }
 
-            const registrationPassword = web3.utils.sha3(password); // Hash the password on the frontend
+//             const registrationPassword = web3.utils.sha3(password); // Hash the password on the frontend
 
-            // Interact with the contract to register the account
-            await userRegistry.methods.register(username, email, password).send({ from: userAccount });
+//             // Interact with the contract to register the account
+//             await userRegistry.methods.register(username, email, password).send({ from: userAccount });
 
-            setWalletAddress(userAccount);
-            setShowPopup(true);
-        } else {
-            window.alert("UserRegistry contract not deployed to detected network.");
-        }
-    } catch (error) {
-        console.error("Error registering account:", error);
-        window.alert(error.message);
-    }
-};
+//             setWalletAddress(userAccount);
+//             setShowPopup(true);
+//         } else {
+//             window.alert("UserRegistry contract not deployed to detected network.");
+//         }
+//     } catch (error) {
+//         console.error("Error registering account:", error);
+//         window.alert(error.message);
+//     }
+// };
 
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   registerAccount();
+  // };
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    registerAccount();
+    
+    try {
+      // Send POST request to the backend
+      const response = await axios.post('http://localhost:5000/api/register', {
+        username,
+        email,
+        password,
+      });
+
+      if (response.data.success) {
+        // Show success popup
+        setShowPopup(true);
+       
+      } else {
+        alert('Registration failed.');
+      }
+    } catch (error) {
+      console.error("Error registering user:", error);
+      alert('An error occurred while registering.');
+    }
   };
 
-  
 
   return (
     <MDBContainer
@@ -224,14 +254,9 @@ function Register() {
             <div className="popup">
               <div className="popup-content">
                 <h3>Registration Successful!</h3>
-                <p>
-                  Your account has been successfully registered.
-                  <br />
-                  <strong>Wallet Address:</strong> {walletAddress}
-                  <br />
-                  <strong>Password:</strong> {password}
-                </p>
-                <MDBBtn onClick={() => setShowPopup(false)}>Close</MDBBtn>
+                <p>Your account has been successfully registered.</p>
+                <Link to=""></Link>
+                <MDBBtn onClick={() => navigate("/otp-verification")}>Close</MDBBtn>
               </div>
             </div>
           )}
