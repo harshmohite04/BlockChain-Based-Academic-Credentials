@@ -11,6 +11,8 @@ contract AcademicCredential {
         string studentName;
         string collegeName;
     }
+    
+    struct Transation
 
     mapping(string => Credential) public credentials;
 
