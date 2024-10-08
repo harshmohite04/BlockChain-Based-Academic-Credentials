@@ -81,3 +81,12 @@
   border-radius: 10px;
   text-align: center;
 }
+
+
+.center{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+  padding: 10px;
+}

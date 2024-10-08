@@ -1,5 +1,5 @@
-import React from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import React from "react";
+import { useLocation, Link } from "react-router-dom";
 import {
   MDBContainer,
   MDBRow,
@@ -8,12 +8,12 @@ import {
   MDBCardBody,
   MDBCardHeader,
   MDBBtn,
-  MDBIcon
-} from 'mdb-react-ui-kit';
+  MDBIcon,
+} from "mdb-react-ui-kit";
 
 export default function Dashboard() {
   const location = useLocation();
-  const userName = location.state?.userName || 'User'; // Default to 'User' if no name is passed
+  const userName = location.state?.userName || "User"; // Default to 'User' if no name is passed
 
   return (
     <MDBContainer className="mt-5">
@@ -25,7 +25,9 @@ export default function Dashboard() {
             </MDBCardHeader>
             <MDBCardBody>
               <h5 className="text-center">Hello, {userName}!</h5>
-              <p className="text-center">Manage your academic credentials easily and efficiently.</p>
+              <p className="text-center">
+                Manage your academic credentials easily and efficiently.
+              </p>
 
               <MDBRow className="mt-4">
                 <MDBCol md="4">
@@ -45,7 +47,9 @@ export default function Dashboard() {
                       <MDBIcon fas icon="user-plus" size="3x" />
                       <h5 className="mt-3">Add Credentials</h5>
                       <p>Submit new academic credentials.</p>
-                      <MDBBtn color="primary">Add</MDBBtn>
+                      <Link to="/add-credentials">
+                        <MDBBtn color="primary">Add</MDBBtn>
+                      </Link>
                     </MDBCardBody>
                   </MDBCard>
                 </MDBCol>
@@ -57,7 +61,8 @@ export default function Dashboard() {
                       <h5 className="mt-3">Settings</h5>
                       <p>Manage your account settings.</p>
                       <Link to="/login">
-                      <MDBBtn color="primary">LOGOUT</MDBBtn></Link>
+                        <MDBBtn color="primary">LOGOUT</MDBBtn>
+                      </Link>
                     </MDBCardBody>
                   </MDBCard>
                 </MDBCol>

@@ -5,6 +5,9 @@ import Login from './Components/Login';
 import Register from './Components/Register';
 import OtpVerification from './Components/OtpVerification';
 import Dashboard from './Components/Dashboard';
+import AcademicForm from './Components/AcademicForm';
+// import AcademicCredentialsTable from './Components/AcademicTable';
+import AcademicTable from './Components/AcademicTable';
 // import RegisterM from './Components/RegisterM';
 
 function App() {
@@ -18,6 +21,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/otp-verification" element={<OtpVerification/>} />
         <Route path="/dashboard" element={<Dashboard/>} />
+        <Route path="/add-credentials" element={<AcademicForm/>} />
+        <Route path="/show-credentials" element={<AcademicTable/>} />
       </Routes>
     </Router>
   );
